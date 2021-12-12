@@ -1,0 +1,9 @@
+*.vs
+*.exe
+*.o
+*.pdb
+*.obj
+.idea/
+cmake-build-*/
+bin/
+build/
