@@ -3,6 +3,7 @@
 
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
+#include <stdio.h>
 #include <cstdlib>
 float GetRandomFloat()
 {
@@ -30,3 +31,5 @@ int randi()
 #include "vectortests.cpp"
 #include "matrixtests.cpp"
 #include "quaterniontests.cpp"
+#include "advancedtests.cpp"
+#include "practicaltests.cpp"
