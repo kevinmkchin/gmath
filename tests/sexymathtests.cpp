@@ -28,6 +28,7 @@ int randi()
 #define SEXY_MATH_IMPLEMENTATION
 #include "../sexymathlibrary.h"
 
+#include "constantstests.cpp"
 #include "vectortests.cpp"
 #include "matrixtests.cpp"
 #include "quaterniontests.cpp"

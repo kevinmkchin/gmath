@@ -337,7 +337,6 @@ struct quat
     {}
 
     quat(float W, float X, float Y, float Z);
-    quat(float X, float Y, float Z);
     quat(float angleInRadians, vec3 axisOfRotation);
 
     /** Gets the conjugate of given quaternion. Doesn't check that Magnitude is 1. */
@@ -631,15 +630,6 @@ mat3::mat3(const mat4& from)
 
 quat::quat(float W, float X, float Y, float Z)
         : w(W)
-        , x(X)
-        , y(Y)
-        , z(Z)
-{
-    *this = Normalize(*this);
-}
-
-quat::quat(float X, float Y, float Z)
-        : w(0.f)
         , x(X)
         , y(Y)
         , z(Z)
