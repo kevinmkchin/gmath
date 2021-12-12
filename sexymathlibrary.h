@@ -266,6 +266,11 @@ union mat4
         columns[3] = vec4(0.f, 0.f, 0.f, 1.f);
     }
 
+    mat4(float e00, float e01, float e02, float e03,
+         float e10, float e11, float e12, float e13,
+         float e20, float e21, float e22, float e23,
+         float e30, float e31, float e32, float e33);
+
     mat4(const mat3& from);
 
     /** Construct a 4x4 rotation matrix from the given quaternion */
@@ -293,6 +298,10 @@ union mat3
         columns[1] = vec3(0.f, 1.f, 0.f);
         columns[2] = vec3(0.f, 0.f, 1.f);
     }
+
+    mat3(float e00, float e01, float e02,
+         float e10, float e11, float e12,
+         float e20, float e21, float e22);
 
     mat3(const mat4& from);
 
@@ -402,10 +411,10 @@ inline mat4 Mul(const mat4& a, const mat4& b);
 inline vec4 Mul(const mat4& A, vec4 v);
 inline vec3 operator*(mat3 A, vec3 v);
 inline mat3 operator*(mat3 a, mat3 b);
-inline mat3 &operator*=(mat3& a, mat3& b);
+inline mat3& operator*=(mat3& a, mat3 b);
 inline vec4 operator*(mat4 A, vec4 v);
 inline mat4 operator*(mat4 a, mat4 b);
-inline mat4 &operator*=(mat4& a, mat4& b);
+inline mat4& operator*=(mat4& a, mat4 b);
 
 /**
  *
@@ -548,6 +557,29 @@ inline float Lerp(float from, float to, float ratio);
 //                                               IMPLEMENTATION
 // ==================================================================================================================
 
+mat4::mat4(float e00, float e01, float e02, float e03,
+           float e10, float e11, float e12, float e13,
+           float e20, float e21, float e22, float e23,
+           float e30, float e31, float e32, float e33)
+{
+    e[0] = e00;
+    e[1] = e01;
+    e[2] = e02;
+    e[3] = e03;
+    e[4] = e10;
+    e[5] = e11;
+    e[6] = e12;
+    e[7] = e13;
+    e[8] = e20;
+    e[9] = e21;
+    e[10] = e22;
+    e[11] = e23;
+    e[12] = e30;
+    e[13] = e31;
+    e[14] = e32;
+    e[15] = e33;
+}
+
 mat4::mat4(const mat3& from)
 {
     columns[0][0] = from[0][0];
@@ -567,6 +599,22 @@ mat4::mat4(const mat3& from)
     columns[3][2] = 0.f;
     columns[3][3] = 1.f;
 }
+
+mat3::mat3(float e00, float e01, float e02,
+           float e10, float e11, float e12,
+           float e20, float e21, float e22)
+{
+    e[0] = e00;
+    e[1] = e01;
+    e[2] = e02;
+    e[3] = e10;
+    e[4] = e11;
+    e[5] = e12;
+    e[6] = e20;
+    e[7] = e21;
+    e[8] = e22;
+}
+
 
 mat3::mat3(const mat4& from)
 {
