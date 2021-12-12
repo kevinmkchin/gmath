@@ -317,6 +317,103 @@ TEST_CASE("vec4 */operators", "[vectors]")
     REQUIRE(vecProduct.w == Approx(w1 / f));
 }
 
+TEST_CASE("vec3 Magnitude", "[vectors]")
+{
+    vec3 a = { -7.2171,50.8564,-79.2506 };
+    REQUIRE(Magnitude(a) == Approx( 94.4411 ));
+
+    a = { 0,0,0 };
+    REQUIRE(Magnitude(a) == 0);
+
+    a = { 0,-1000,0 };
+    REQUIRE(Magnitude(a) == 1000);
+}
+
+TEST_CASE("vec4 Magnitude", "[vectors]")
+{
+    vec4 a = { -26.5442,-98.014,21.6079,-8.7283 };
+    REQUIRE(Magnitude(a) == Approx( 104.185 ));
+
+    a = { 0,0,0 , 0 };
+    REQUIRE(Magnitude(a) == 0);
+
+    a = { 0,-1000,0 , 0 };
+    REQUIRE(Magnitude(a) == 1000);
+}
+
+TEST_CASE("vec2 Magnitude", "[vectors]")
+{
+    vec2 a = { -26.5442,-98.014 };
+    REQUIRE(Magnitude(a) == Approx( 101.545 ));
+
+    a = { 0,0 };
+    REQUIRE(Magnitude(a) == 0);
+
+    a = { -1000,0 };
+    REQUIRE(Magnitude(a) == 1000);
+}
+
+TEST_CASE("vec3 Dot", "[vectors]")
+{
+    vec3 a = vec3(-56.6139,26.0876,60.963);
+    vec3 b = vec3(-29.9211,30.9289,-43.0554);
+    REQUIRE(Dot(a, b) == Approx(-123.975f));
+
+    a = vec3( -52.394,-54.4943,-7.7292 );
+    b = vec3( 31.1434,-4.9766,-57.8896 );
+    REQUIRE(Dot(a, b) == Approx( -913.091 ));
+
+    a = vec3( 0, 0, 0 );
+    b = vec3( 31.1434,-4.9766,-57.8896 );
+    REQUIRE(Dot(a, b) == 0.f);
+
+    a = vec3( 0, 1, 0 );
+    b = vec3( 31.1434,-4.9766,-57.8896 );
+    REQUIRE(Dot(a, b) == Approx(-4.9766));
+
+    a = vec3( 10000, -10000, 0 );
+    b = vec3( 31.1434,-4.9766,-57.8896 );
+    REQUIRE(Dot(a, b) == Approx(361200));
+}
+TEST_CASE("vec4 Dot", "[vectors]")
+{
+    vec4 a = {-61.3919, 6.3233, -55.6448, 51.4228};
+    vec4 b = {16.2629, -29.4638, 29.0174, -8.9311};
+    REQUIRE(Dot(a, b) == Approx(-3258.65f));
+
+    a = {86.7134, -0.5726, -1.0076, -92.8532};
+    b = {-26.5442, -98.014, 21.6079, -8.7283};
+    REQUIRE(Dot(a, b) == Approx( -1456.94 ));
+
+    a = vec4( 0, 0, 0, 0 );
+    b = {-26.5442, -98.014, 21.6079, -8.7283};
+    REQUIRE(Dot(a, b) == 0.f);
+
+    a = vec4( 0, 1, 0, 1 );
+    b = {-26.5442, -98.014, 21.6079, -8.7283};
+    REQUIRE(Dot(a, b) == Approx(-106.7423));
+}
+TEST_CASE("vec2 Dot", "[vectors]")
+{
+    vec2 a = vec2(-86.5802,-12.6629);
+    vec2 b = vec2(-18.6965,75.2702);
+    REQUIRE(Dot(a, b) == Approx(665.608f));
+
+    a = vec2( 0, 0);
+    b = vec2( 31.1434,-4.9766 );
+    REQUIRE(Dot(a, b) == 0.f);
+
+    a = vec2( 1, 0);
+    b = vec2( 31.1434,-4.9766 );
+    REQUIRE(Dot(a, b) == Approx(31.1434));
+
+    a = vec2( 10000, 0);
+    b = vec2( 31.1434, -57.8896 );
+    REQUIRE(Dot(a, b) == Approx(311434));
+}
+
+
+
 TEST_CASE("vec3 normalize", "[vectors]")
 {
     vec3 a = vec3(23.f, 13.f, -0.313f);
@@ -478,4 +575,11 @@ TEST_CASE("vec4 lerp", "[vectors]")
     REQUIRE(glm::mix(glmA, glmB, f).z == Lerp(smlA, smlB, f).z);
 }
 
-
+TEST_CASE("vec3 cross product", "[vectors]")
+{
+    vec3 a = {-7.2171,50.8564,-79.2506};
+    vec3 b = {72.247,16.2563,41.809};
+    REQUIRE(Cross(a, b).x == Approx(3414.57675));
+    REQUIRE(Cross(a, b).y == Approx(-5423.87836));
+    REQUIRE(Cross(a, b).z == Approx(-3791.54567));
+}
