@@ -5,7 +5,7 @@ void EqualMatrices(mat3 lhs, mat3 rhs)
     float* rptr = (float*)&rhs;
     for(int i = 0; i < 9; ++i)
     {
-        REQUIRE(*(lptr + i) == *(rptr + i));
+        CHECK(*(lptr + i) == *(rptr + i));
     }
 }
 
@@ -16,11 +16,7 @@ void EqualMatrices(mat3 lhs, glm::mat3 rhs)
     float* rptr = glm::value_ptr(rhs);
     for(int i = 0; i < 9; ++i)
     {
-        if(*(lptr + i) != *(rptr + i))
-        {
-            printf("%d", i);
-        }
-        REQUIRE(*(lptr + i) == *(rptr + i));
+        CHECK(*(lptr + i) == *(rptr + i));
     }
 }
 
@@ -31,7 +27,7 @@ void EqualMatrices(mat4 lhs, mat4 rhs)
     float* rptr = (float*)&rhs;
     for(int i = 0; i < 16; ++i)
     {
-        REQUIRE(*(lptr + i) == *(rptr + i));
+        CHECK(*(lptr + i) == *(rptr + i));
     }
 }
 
@@ -42,7 +38,7 @@ void EqualMatrices(mat4 lhs, glm::mat4 rhs)
     float* rptr = glm::value_ptr(rhs);
     for(int i = 0; i < 16; ++i)
     {
-        REQUIRE(*(lptr + i) == *(rptr + i));
+        CHECK(*(lptr + i) == *(rptr + i));
     }
 }
 
@@ -86,16 +82,16 @@ TEST_CASE("matrix construction", "[matrices]")
         mat4 A;
         memcpy(&A, values, sizeof(values));
         mat3 B = mat3(A);
-        REQUIRE(A[0][0] == B[0][0]);
-        REQUIRE(A[0][1] == B[0][1]);
-        REQUIRE(A[0][2] == B[0][2]);
-        REQUIRE(A[1][0] == B[1][0]);
-        REQUIRE(A[1][1] == B[1][1]);
-        REQUIRE(A[1][2] == B[1][2]);
-        REQUIRE(A[2][0] == B[2][0]);
-        REQUIRE(A[2][1] == B[2][1]);
-        REQUIRE(A[2][2] == B[2][2]);
-        REQUIRE(A[2][2] == B[2][2]);
+        CHECK(A[0][0] == B[0][0]);
+        CHECK(A[0][1] == B[0][1]);
+        CHECK(A[0][2] == B[0][2]);
+        CHECK(A[1][0] == B[1][0]);
+        CHECK(A[1][1] == B[1][1]);
+        CHECK(A[1][2] == B[1][2]);
+        CHECK(A[2][0] == B[2][0]);
+        CHECK(A[2][1] == B[2][1]);
+        CHECK(A[2][2] == B[2][2]);
+        CHECK(A[2][2] == B[2][2]);
     }
 
     SECTION("mat4 from mat3 back to mat4")
@@ -104,23 +100,23 @@ TEST_CASE("matrix construction", "[matrices]")
         mat3 A;
         memcpy(&A, values, sizeof(values));
         mat4 B = mat4(A);
-        REQUIRE(A[0][0] == B[0][0]);
-        REQUIRE(A[0][1] == B[0][1]);
-        REQUIRE(A[0][2] == B[0][2]);
-        REQUIRE(A[1][0] == B[1][0]);
-        REQUIRE(A[1][1] == B[1][1]);
-        REQUIRE(A[1][2] == B[1][2]);
-        REQUIRE(A[2][0] == B[2][0]);
-        REQUIRE(A[2][1] == B[2][1]);
-        REQUIRE(A[2][2] == B[2][2]);
-        REQUIRE(A[2][2] == B[2][2]);
-        REQUIRE(0.f == B[0][3]);
-        REQUIRE(0.f == B[1][3]);
-        REQUIRE(0.f == B[2][3]);
-        REQUIRE(0.f == B[3][0]);
-        REQUIRE(0.f == B[3][1]);
-        REQUIRE(0.f == B[3][2]);
-        REQUIRE(1.f == B[3][3]);
+        CHECK(A[0][0] == B[0][0]);
+        CHECK(A[0][1] == B[0][1]);
+        CHECK(A[0][2] == B[0][2]);
+        CHECK(A[1][0] == B[1][0]);
+        CHECK(A[1][1] == B[1][1]);
+        CHECK(A[1][2] == B[1][2]);
+        CHECK(A[2][0] == B[2][0]);
+        CHECK(A[2][1] == B[2][1]);
+        CHECK(A[2][2] == B[2][2]);
+        CHECK(A[2][2] == B[2][2]);
+        CHECK(0.f == B[0][3]);
+        CHECK(0.f == B[1][3]);
+        CHECK(0.f == B[2][3]);
+        CHECK(0.f == B[3][0]);
+        CHECK(0.f == B[3][1]);
+        CHECK(0.f == B[3][2]);
+        CHECK(1.f == B[3][3]);
 
         mat3 backToA = mat3(B);
         EqualMatrices(A, backToA);
@@ -134,15 +130,15 @@ TEST_CASE("matrix []operator", "[matrices]")
         float values[9] = { -40.8881,-1.2438,-20.0107,-1.0601,-21.6366,-10.1375,25.5236,-1.1968,-2.1366 };
         mat3 A;
         memcpy(&A, values, sizeof(values));
-        REQUIRE(A[0][0] == values[0]);
-        REQUIRE(A[0][1] == values[1]);
-        REQUIRE(A[0][2] == values[2]);
-        REQUIRE(A[1][0] == values[3]);
-        REQUIRE(A[1][1] == values[4]);
-        REQUIRE(A[1][2] == values[5]);
-        REQUIRE(A[2][0] == values[6]);
-        REQUIRE(A[2][1] == values[7]);
-        REQUIRE(A[2][2] == values[8]);
+        CHECK(A[0][0] == values[0]);
+        CHECK(A[0][1] == values[1]);
+        CHECK(A[0][2] == values[2]);
+        CHECK(A[1][0] == values[3]);
+        CHECK(A[1][1] == values[4]);
+        CHECK(A[1][2] == values[5]);
+        CHECK(A[2][0] == values[6]);
+        CHECK(A[2][1] == values[7]);
+        CHECK(A[2][2] == values[8]);
     }
 
     SECTION("mat4 []operator")
@@ -150,22 +146,22 @@ TEST_CASE("matrix []operator", "[matrices]")
         float values[16] = { -13.5259,46.896,-39.7194,-37.9357,-6.3035,39.0683,-37.5612,-15.4636,-21.3852,-17.1204,-42.0679,-22.6063,49.3979,14.7548,-24.8728,39.3605 };
         mat4 A;
         memcpy(&A, values, sizeof(values));
-        REQUIRE(A[0][0] == values[0]);
-        REQUIRE(A[0][1] == values[1]);
-        REQUIRE(A[0][2] == values[2]);
-        REQUIRE(A[0][3] == values[3]);
-        REQUIRE(A[1][0] == values[4]);
-        REQUIRE(A[1][1] == values[5]);
-        REQUIRE(A[1][2] == values[6]);
-        REQUIRE(A[1][3] == values[7]);
-        REQUIRE(A[2][0] == values[8]);
-        REQUIRE(A[2][1] == values[9]);
-        REQUIRE(A[2][2] == values[10]);
-        REQUIRE(A[2][3] == values[11]);
-        REQUIRE(A[3][0] == values[12]);
-        REQUIRE(A[3][1] == values[13]);
-        REQUIRE(A[3][2] == values[14]);
-        REQUIRE(A[3][3] == values[15]);
+        CHECK(A[0][0] == values[0]);
+        CHECK(A[0][1] == values[1]);
+        CHECK(A[0][2] == values[2]);
+        CHECK(A[0][3] == values[3]);
+        CHECK(A[1][0] == values[4]);
+        CHECK(A[1][1] == values[5]);
+        CHECK(A[1][2] == values[6]);
+        CHECK(A[1][3] == values[7]);
+        CHECK(A[2][0] == values[8]);
+        CHECK(A[2][1] == values[9]);
+        CHECK(A[2][2] == values[10]);
+        CHECK(A[2][3] == values[11]);
+        CHECK(A[3][0] == values[12]);
+        CHECK(A[3][1] == values[13]);
+        CHECK(A[3][2] == values[14]);
+        CHECK(A[3][3] == values[15]);
     }
 }
 
@@ -238,9 +234,9 @@ TEST_CASE("mat3 multiplication")
         glm::vec3 glmv = glm::vec3(-91.4206,26.7128,32.1783);
         vec3 smlProduct = A * v;
         glm::vec3 glmProduct = glmA * glmv;
-        REQUIRE(smlProduct.x == glmProduct.x);
-        REQUIRE(smlProduct.y == glmProduct.y);
-        REQUIRE(smlProduct.z == glmProduct.z);
+        CHECK(smlProduct.x == glmProduct.x);
+        CHECK(smlProduct.y == glmProduct.y);
+        CHECK(smlProduct.z == glmProduct.z);
     }
 }
 
@@ -292,9 +288,9 @@ TEST_CASE("mat4 multiplication")
         glm::vec4 glmv = glm::vec4(-91.4206,26.7128,32.1783,13.7332);
         vec4 smlProduct = A * v;
         glm::vec4 glmProduct = glmA * glmv;
-        REQUIRE(smlProduct.x == glmProduct.x);
-        REQUIRE(smlProduct.y == glmProduct.y);
-        REQUIRE(smlProduct.z == glmProduct.z);
-        REQUIRE(smlProduct.w == glmProduct.w);
+        CHECK(smlProduct.x == glmProduct.x);
+        CHECK(smlProduct.y == glmProduct.y);
+        CHECK(smlProduct.z == glmProduct.z);
+        CHECK(smlProduct.w == glmProduct.w);
     }
 }
