@@ -67,6 +67,8 @@ STANDARDS:
 #define SML_LEFT_VECTOR (-SML_RIGHT_VECTOR)
 #define SML_PI 3.1415926535f
 #define SML_TWOPI 6.28318530718f
+#define SML_D2R SML_DEG2RAD
+#define SML_R2D SML_RAD2DEG
 #define SML_DEG2RAD 0.0174532925f  // degrees * SML_DEG2RAD = radians
 #define SML_RAD2DEG 57.2958f       // radians * SML_RAD2DEG = degrees
 
@@ -276,6 +278,11 @@ union mat4
     /** Construct a 4x4 rotation matrix from the given quaternion */
     mat4(quat q);
 
+    inline void Empty()
+    {
+        *this = { 0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f };
+    }
+
     inline mat4 GetTranspose();
 
     /** Returns a float pointer to the memory layout of the matrix. Useful
@@ -308,7 +315,12 @@ union mat3
     /** Construct 3x3 rotation matrix from given quaternion */
     mat3(quat q);
 
-    mat3 GetTranspose();
+    inline void Empty()
+    {
+        *this = { 0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f,0.f };
+    }
+
+    inline mat3 GetTranspose();
 
     /** Returns a float pointer to the memory layout of the matrix. Useful
         for uploading data to graphics API. OpenGL uses column-major order.*/
@@ -472,7 +484,7 @@ inline mat4 ProjectionMatrixOrthographic(float left, float right, float bottom, 
 /** Creates a ViewMatrix at eye looking at target. */
 inline mat4 ViewMatrixLookAt(vec3 const& eye, vec3 const& target, vec3 const& eyeUpVector);
 
-/** Checks if Dot product of a and b is within 1 +/- tolerance */
+/** Checks if Dot product of a and b is within +/- tolerance */
 inline bool Similar(quat a, quat b, float tolerance = 0.001f);
 
 /** Combines rotations represented by quaternions. Equivalent to second * first. */
@@ -541,7 +553,7 @@ inline mat4 QuatToMat4(quat q);
     ratio : Interpolation ratio.
     https://www.youtube.com/watch?v=x1aCcyD0hqE&ab_channel=JorgeRodriguez
 */
-inline quat SLerp(const quat from, const quat to, const float ratio);
+inline quat Slerp(const quat from, const quat to, const float ratio);
 
 /** Linearly interpolate between two floats */
 inline float Lerp(float from, float to, float ratio);
@@ -949,6 +961,7 @@ inline mat4 ProjectionMatrixPerspective(float fovy, float aspect, float nearclip
     Result[2][2] = -(farclip + nearclip) / (farclip - nearclip);
     Result[2][3] = -1.f;
     Result[3][2] = -(2.f * farclip * nearclip) / (farclip - nearclip);
+    Result[3][3] = 0.f;
     return Result;
 }
 
@@ -982,6 +995,7 @@ inline mat4 ViewMatrixLookAt(vec3 const& eye, vec3 const& target, vec3 const& ey
     vec3 const up = Cross(right, direction);
 
     mat4 ret = mat4();
+    ret.Empty();
 
     ret[0][0] = right.x;
     ret[1][0] = right.y;
@@ -998,13 +1012,14 @@ inline mat4 ViewMatrixLookAt(vec3 const& eye, vec3 const& target, vec3 const& ey
     ret[3][0] = -Dot(right, eye);
     ret[3][1] = -Dot(up, eye);
     ret[3][2] = Dot(direction, eye);
+    ret[3][3] = 1.f;
 
     return ret;
 }
 
 inline mat3 mat3::GetTranspose()
 {
-    mat3 ret = {};
+    mat3 ret;
     for(int col = 0; col < 3; ++col)
     {
         for(int row = 0; row < 3; ++row)
@@ -1017,7 +1032,7 @@ inline mat3 mat3::GetTranspose()
 
 inline mat4 mat4::GetTranspose()
 {
-    mat4 ret = {};
+    mat4 ret;
     for(int col = 0; col < 4; ++col)
     {
         for(int row = 0; row < 4; ++row)
@@ -1296,9 +1311,9 @@ inline mat4 QuatToMat4(quat q)
     return mat4(QuatToMat3(q));
 }
 
-inline quat SLerp(const quat from, const quat to, const float ratio)
+inline quat Slerp(const quat from, const quat to, const float ratio)
 {
-    float t = SML_clamp(ratio, 0.f, 1.f);
+    float t = ratio;
     quat start = Normalize(from);
     quat end = Normalize(to);
     quat d = end * from.GetInverse();
