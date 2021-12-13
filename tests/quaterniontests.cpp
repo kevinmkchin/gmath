@@ -264,3 +264,34 @@ TEST_CASE("Euler to Quaternion to Euler Conversion", "[quaternions]")
     CHECK(actual.y == Approx(expected.y));
     CHECK(actual.z == Approx(expected.z));
 }
+
+// TODO
+// TEST_CASE("DirectionToOrientation", "[matrices]")
+// {
+
+// }
+
+// TEST_CASE("OrientationToDirection", "[matrices]")
+// {
+
+// }
+
+// TEST_CASE("Combine Rotations", "[quaternions]")
+// {
+
+// }
+
+// TEST_CASE("Rotation From To", "[quaternions]")
+// {
+
+// }
+
+// TEST_CASE("Rotation Difference", "[quaternions]")
+// {
+
+// }
+
+// TEST_CASE("Rotate Vector")
+// {
+    
+// }

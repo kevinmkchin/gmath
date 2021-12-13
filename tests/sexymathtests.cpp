@@ -25,7 +25,18 @@ int randi()
 {
     return GetRandomInt();
 }
-
+int CompareFloats(float x, float y, float epsilon = 0.000001f)
+{
+    if(std::fabs(x - y) < epsilon)
+    {
+        return true;
+    }
+    else
+    {
+        printf("FLOAT COMPARISON: %f != %f \n", x, y);
+        return false;
+    }
+}
 
 #define SEXY_MATH_IMPLEMENTATION
 #include "../sexymathlibrary.h"
@@ -35,4 +46,3 @@ int randi()
 #include "matrixtests.cpp"
 #include "quaterniontests.cpp"
 #include "advancedtests.cpp"
-#include "practicaltests.cpp"

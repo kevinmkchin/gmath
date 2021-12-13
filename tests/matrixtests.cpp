@@ -5,7 +5,9 @@ void EqualMatrices(mat3 lhs, mat3 rhs)
     float* rptr = (float*)&rhs;
     for(int i = 0; i < 9; ++i)
     {
-        CHECK(*(lptr + i) == *(rptr + i));
+        float l = *(lptr + i);
+        float r = *(rptr + i);
+        CHECK(CompareFloats(l, r));
     }
 }
 
@@ -16,7 +18,9 @@ void EqualMatrices(mat3 lhs, glm::mat3 rhs)
     float* rptr = glm::value_ptr(rhs);
     for(int i = 0; i < 9; ++i)
     {
-        CHECK(*(lptr + i) == *(rptr + i));
+        float l = *(lptr + i);
+        float r = *(rptr + i);
+        CHECK(CompareFloats(l, r));
     }
 }
 
@@ -27,7 +31,9 @@ void EqualMatrices(mat4 lhs, mat4 rhs)
     float* rptr = (float*)&rhs;
     for(int i = 0; i < 16; ++i)
     {
-        CHECK(*(lptr + i) == *(rptr + i));
+        float l = *(lptr + i);
+        float r = *(rptr + i);
+        CHECK(CompareFloats(l, r));
     }
 }
 
@@ -38,7 +44,22 @@ void EqualMatrices(mat4 lhs, glm::mat4 rhs)
     float* rptr = glm::value_ptr(rhs);
     for(int i = 0; i < 16; ++i)
     {
-        CHECK(*(lptr + i) == *(rptr + i));
+        float l = *(lptr + i);
+        float r = *(rptr + i);
+        CHECK(CompareFloats(l, r));
+    }
+}
+
+void EqualMatrices(mat4 lhs, glm::mat4 rhs, float ep)
+{
+    /* Compares actual memory */
+    float* lptr = (float*)&lhs;
+    float* rptr = glm::value_ptr(rhs);
+    for(int i = 0; i < 16; ++i)
+    {
+        float l = *(lptr + i);
+        float r = *(rptr + i);
+        CHECK(CompareFloats(l, r, ep));
     }
 }
 
