@@ -4,6 +4,8 @@
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include <stdio.h>
+#include <algorithm>
+#include <limits>
 #include <cstdlib>
 float GetRandomFloat()
 {
