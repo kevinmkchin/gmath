@@ -20,7 +20,6 @@ void EqualQuaternions(quat lhs, glm::quat rhs)
     CHECK(*(lptr + 3) == *(rptr + 2));
 }
 
-#include <glm/gtx/quaternion.hpp>
 TEST_CASE("quaternion construction AND normalize", "[quaternions]")
 {
     SECTION("default constructor")
@@ -146,7 +145,7 @@ TEST_CASE("Rotate Vector with quaternions", "[quaternions]")
 {
     quat q1 = EulerToQuat(0.f, 90.f * SML_DEG2RAD, 0.f);
     quat q2 = EulerToQuat(45.f * SML_DEG2RAD, 0.f, 0.f);
-    quat q3 = q2 * q1;
+    quat q3 = CombineRotations(q1, q2);
     quat expect = { 0.707107, 0.0, 0.707107, 0.0 };
     REQUIRE(q1.w == Approx(expect.w));
     REQUIRE(q1.x == Approx(expect.x));
@@ -199,161 +198,69 @@ TEST_CASE("Compounding rotations with quaternions", "[quaternions]")
     CHECK(combined.z == Approx(expect.z));
 }
 
-// kc_math tests
+TEST_CASE("Euler to Quaternion to Euler Conversion", "[quaternions]")
+{
+    vec3 expected = vec3(220.f, -79.f, -50.f);
+    quat q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(-140.f, -79.f, -50.f);
+    vec3 actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y));
+    CHECK(actual.z == Approx(expected.z));
 
-    // quaternion q1 = euler_to_quat(0.f, 90.f*KC_DEG2RAD, 0.f);
-    // quaternion q2 = euler_to_quat(45.f*KC_DEG2RAD, 0.f, 0.f);
-    // quaternion q3 = q2 * q1; // The first rotation should go last.
-    // printf("Quaternion 1: (%f, %f, %f, %f)\n", q1.w, q1.x, q1.y, q1.z);
-    // printf("Quaternion 2: (%f, %f, %f, %f)\n", q2.w, q2.x, q2.y, q2.z);
-    // printf("Quaternion 3, q2 * q1: (%f, %f, %f, %f)\n", q3.w, q3.x, q3.y, q3.z);
-    // vec3 vecRotated = rotate_vector(make_vec3(1.f, 0.f, 0.f), q3);
-    // printf("Rotating (1, 0, 0) with q3: (%f, %f, %f)\n", vecRotated.x, vecRotated.y, vecRotated.z);
-    // std::getline(std::cin, s);
-    // vecRotated = rotate_vector(make_vec3(1.f, 0.f, 0.f), q1);
-    // printf("Rotating (1, 0, 0) with q1: (%f, %f, %f)\n", vecRotated.x, vecRotated.y, vecRotated.z);
-    // std::getline(std::cin, s);
-    // vecRotated = rotate_vector(vecRotated, q2);
-    // printf("Rotating (0, 0, -1) with q2: (%f, %f, %f)\n", vecRotated.x, vecRotated.y, vecRotated.z);
-    // std::getline(std::cin, s);
+    expected = vec3(20.f, -79.f, 220.f);
+    q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(-160.f, 101.f, -40.0f);
+    actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y));
+    CHECK(actual.z == Approx(expected.z));
 
-// 
+    expected = vec3(-300.f, -179.f, 0.f);
+    q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(60.f, -179.f, 0.f);
+    actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y));
+    CHECK(actual.z == Approx(expected.z));
 
-/************************************
-    TEST XZY order of rotation
-*************************************/
-//     std::string s;
-// /*
-//     TEST Euler to Quaternion conversion in Euler Order XZY
+    expected = vec3(-300.f, -179.f, -91.f);
+    q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(-120.f, 1.0f, -89.f);
+    actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y).epsilon(0.0001f));
+    CHECK(actual.z == Approx(expected.z));
 
-//     FOR XZY Euler (Y at the top of hierarchy, applied last)
-//     euler(x: 45 deg, y: 20 deg, z: 67 deg) converts to quaternion(w: 0.722, x: 0.403, y: 0.342, z: 0.447)
-// */
-//     vec3 rot = make_vec3(45.f, 20.f, 67.f);
-//     quaternion xrot = euler_to_quat(rot.x*KC_DEG2RAD, 0.f, 0.f);
-//     quaternion yrot = euler_to_quat(0.f, 0.f, rot.y*KC_DEG2RAD); // euler_to_quat takes roll, pitch, yaw in that order
-//     quaternion zrot = euler_to_quat(0.f, rot.z*KC_DEG2RAD, 0.f);
-//     // THIS IS XZY ORDER where Y rotation is top of hierarchy (applied last)
-//     quaternion expected = yrot * zrot * xrot; // The first rotation should go last here, last rotation should go first
-//     quaternion actual = euler_to_quat(rot*KC_DEG2RAD);
-//     printf("expected:       (0.722028, 0.402813, 0.341789, 0.446763)\n");
-//     printf("individual XZY: (%f, %f, %f, %f)\n", expected.w, expected.x, expected.y, expected.z);
-//     printf("allatonce  XZY: (%f, %f, %f, %f)\n", actual.w, actual.x, actual.y, actual.z);
-//     printf("---\n");
-//     //std::getline(std::cin, s);
+    expected = vec3(-300.f, -179.f, 180.f);
+    q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(-120.f, 1.f, 0.f);
+    actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y));
+    CHECK(((actual.z - expected.z < 0.0001f) && (actual.z - expected.z > -0.0001f)));
 
-// /*
-//     TEST Euler to Quaternion then Quaternion to Euler to conversion in Euler Order XZY
-// */
-//     vec3 expected2 = make_vec3(220, -79, -50);
-//     vec3 inrad = expected2 * KC_DEG2RAD;
-//     quaternion xzy = euler_to_quat(inrad);
-//     vec3 converted_to_quat_and_back = quat_to_euler(xzy);
-//     vec3 indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
+    expected = vec3(-300.f, -179.f, 181.f);
+    q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(-120.f, 1.f, -1.f);
+    actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y));
+    CHECK(actual.z == Approx(expected.z));
 
-//     expected2 = make_vec3(20.f, -79.f, 220.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
+    expected = vec3(-300.f, -179.f, 270.f);
+    q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(0.f, 121.f, -90.f);
+    actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y));
+    CHECK(actual.z == Approx(expected.z));
 
-//     expected2 = make_vec3(-300.f, -179.f, 0.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, 20.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, -90.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, -91.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, 180.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, 181.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-
-//     expected2 = make_vec3(-300.f, -179.f, -180.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, -181.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, 270.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     expected2 = make_vec3(-300.f, -179.f, 271.f);
-//     inrad = expected2 * KC_DEG2RAD;
-//     xzy = euler_to_quat(inrad);
-//     converted_to_quat_and_back = quat_to_euler(xzy);
-//     indegrees = converted_to_quat_and_back * KC_RAD2DEG;
-//     printf("expected: (%f, %f, %f)\n", expected2.x, expected2.y, expected2.z);
-//     printf("actual  : (%f, %f, %f)\n", indegrees.x, indegrees.y, indegrees.z);
-//     printf("---\n");
-
-//     std::getline(std::cin, s);
-//     return 0;
-// //
+    expected = vec3(-300.f, -179.f, 271.f);
+    q = EulerToQuat(expected * SML_DEG2RAD);
+    expected = vec3(60.f, -179.f, -89.f);
+    actual = QuatToEuler(q) * SML_RAD2DEG;
+    CHECK(actual.x == Approx(expected.x));
+    CHECK(actual.y == Approx(expected.y));
+    CHECK(actual.z == Approx(expected.z));
+}
