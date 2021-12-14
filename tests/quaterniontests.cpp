@@ -3,10 +3,10 @@ void EqualQuaternions(quat lhs, quat rhs)
     /* Compares actual memory */
     float* lptr = (float*)&lhs;
     float* rptr = (float*)&rhs;
-    CHECK(*(lptr + 0) == *(rptr + 0));
-    CHECK(*(lptr + 1) == *(rptr + 1));
-    CHECK(*(lptr + 2) == *(rptr + 2));
-    CHECK(*(lptr + 3) == *(rptr + 3));
+    CHECK(CompareFloats(*(lptr + 0), *(rptr + 0)));
+    CHECK(CompareFloats(*(lptr + 1), *(rptr + 1)));
+    CHECK(CompareFloats(*(lptr + 2), *(rptr + 2)));
+    CHECK(CompareFloats(*(lptr + 3), *(rptr + 3)));
 }
 
 void EqualQuaternions(quat lhs, glm::quat rhs)
@@ -14,10 +14,10 @@ void EqualQuaternions(quat lhs, glm::quat rhs)
     /* Compares actual memory */
     float* lptr = (float*)&lhs;
     float* rptr = glm::value_ptr(rhs);
-    CHECK(*(lptr + 0) == *(rptr + 3));
-    CHECK(*(lptr + 1) == *(rptr + 0));
-    CHECK(*(lptr + 2) == *(rptr + 1));
-    CHECK(*(lptr + 3) == *(rptr + 2));
+    CHECK(CompareFloats(*(lptr + 0), *(rptr + 3)));
+    CHECK(CompareFloats(*(lptr + 1), *(rptr + 0)));
+    CHECK(CompareFloats(*(lptr + 2), *(rptr + 1)));
+    CHECK(CompareFloats(*(lptr + 3), *(rptr + 2)));
 }
 
 TEST_CASE("quaternion construction AND normalize", "[quaternions]")
@@ -265,33 +265,113 @@ TEST_CASE("Euler to Quaternion to Euler Conversion", "[quaternions]")
     CHECK(actual.z == Approx(expected.z));
 }
 
-// TODO
-// TEST_CASE("DirectionToOrientation", "[matrices]")
-// {
+TEST_CASE("Combine Rotations", "[quaternions]")
+{
+    quat q1 = quat(60.f*SML_RAD2DEG, vec3(1,1,-1));
+    quat q2 = quat(-30.33f*SML_RAD2DEG, vec3(3,1,-2));
+    quat expect = q2 * q1;
+    quat actual = CombineRotations(q1, q2);
+    EqualQuaternions(actual, expect);
+}
 
-// }
+TEST_CASE("Rotation Difference", "[quaternions]")
+{
+    quat a = quat(142.f*SML_RAD2DEG, vec3(1,1,-1));
+    quat b = quat(-89.98f*SML_RAD2DEG, vec3(3,1,-2));
+    quat expect = Mul(b, a.GetInverseUnitQuaternion());
+    quat actual = RotationDifference(a, b);
+    EqualQuaternions(actual, expect);
+}
 
-// TEST_CASE("OrientationToDirection", "[matrices]")
-// {
+TEST_CASE("Rotation From To", "[quaternions]")
+{
+    SECTION("from to 90")
+    {
+        vec3 from = vec3(1,0,0);
+        vec3 to = vec3(0,0,1);
+        quat expect = quat(90.f*SML_DEG2RAD, vec3(0,-1,0));
+        quat actual = RotationFromTo(from, to);
+        EqualQuaternions(actual, expect);
+    }
 
-// }
+    SECTION("from to 120")
+    {
+        vec3 from = vec3(0,-1,0);
+        vec3 to = vec3(sqrt(3.f)/2.f, 0.5f, 0.f);
+        quat expect = quat(120.f*SML_DEG2RAD, vec3(0,0,1));
+        quat actual = RotationFromTo(from, to);
+        EqualQuaternions(actual, expect);
+    }
+}
 
-// TEST_CASE("Combine Rotations", "[quaternions]")
-// {
+TEST_CASE("DirectionToOrientation", "[quaternions]")
+{
+    SECTION("dir to orient 1")
+    {
+        vec3 dir = vec3(3.4341,16.7249,3.1121);
+        quat expect = RotationFromTo(SML_FORWARD_VECTOR, dir);
+        quat actual = DirectionToOrientation(dir);
+        EqualQuaternions(actual, expect);
+    }
 
-// }
+    SECTION("dir to orient 2")
+    {
+        vec3 dir = vec3(8.0431,-1.2318,-13.2272);
+        quat expect = RotationFromTo(SML_FORWARD_VECTOR, dir);
+        quat actual = DirectionToOrientation(dir);
+        EqualQuaternions(actual, expect);
+    }
 
-// TEST_CASE("Rotation From To", "[quaternions]")
-// {
+    SECTION("dir to orient 3")
+    {
+        vec3 dir = vec3(5.019,-10.3291,7.067);
+        quat expect = RotationFromTo(SML_FORWARD_VECTOR, dir);
+        quat actual = DirectionToOrientation(dir);
+        EqualQuaternions(actual, expect);
+    }
+}
 
-// }
+TEST_CASE("OrientationToDirection", "[quaternions]")
+{
+    SECTION("turn around")
+    {
+        quat q = quat(0, 0, 1, 0);
+        vec3 expect = vec3(-1, 0, 0);
+        vec3 actual = OrientationToDirection(q);
+        CHECK(actual.x == Approx(expect.x));
+        CHECK(actual.y == Approx(expect.y));
+        CHECK(actual.z == Approx(expect.z));
+    }
 
-// TEST_CASE("Rotation Difference", "[quaternions]")
-// {
+    SECTION("roll only")
+    {
+        quat q = quat(-0.7193398, 0.6946584, 0, 0);
+        vec3 expect = vec3(1, 0, 0);
+        vec3 actual = OrientationToDirection(q);
+        CHECK(actual.x == Approx(expect.x));
+        CHECK(actual.y == Approx(expect.y));
+        CHECK(actual.z == Approx(expect.z));
+    }
 
-// }
+    SECTION("rotate 180 around xz axis")
+    {
+        quat q = quat(0, 0.7071068, 0, 0.7071068);
+        vec3 expect = vec3(0, 0, 1);
+        expect = Normalize(expect);
+        vec3 actual = OrientationToDirection(q);
+        CHECK(actual.x == Approx(expect.x));
+        CHECK(actual.y == Approx(expect.y));
+        CHECK(actual.z == Approx(expect.z));
+    }
 
-// TEST_CASE("Rotate Vector")
-// {
-    
-// }
+    SECTION("rotate 90 around xz axis")
+    {
+        quat q = quat(0.7071068, 0.5, 0, 0.5);
+        vec3 expect = vec3(0.500000, 0.707107, 0.500000);
+        expect = Normalize(expect);
+        vec3 actual = OrientationToDirection(q);
+        CHECK(actual.x == Approx(expect.x));
+        CHECK(actual.y == Approx(expect.y));
+        CHECK(actual.z == Approx(expect.z));
+    }
+}
