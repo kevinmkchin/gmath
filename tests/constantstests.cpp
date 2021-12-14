@@ -1,14 +1,11 @@
-#define SML_min(a, b) ((a) < (b) ? (a) : (b))
-#define SML_max(a, b) ((a) > (b) ? (a) : (b))
-#define SML_abs(a) ((a) < 0.f ? (-(a)) : (a))
-#define SML_clamp(x, lower, upper) SML_max((lower), SML_min((upper), (x)))
-
 TEST_CASE("check constants", "[constants]")
 {
     CHECK(SML_PI == Approx(3.1415926535f));
     CHECK(SML_TWOPI == Approx(6.28318530718f));
     CHECK(SML_DEG2RAD == Approx(0.0174532925f));
     CHECK(SML_RAD2DEG == Approx(57.2958f));
+    CHECK(SML_D2R == Approx(0.0174532925f));
+    CHECK(SML_R2D == Approx(57.2958f));
 
     CHECK(SML_FORWARD_VECTOR.x == 1.f);
     CHECK(SML_FORWARD_VECTOR.y == 0.f);
