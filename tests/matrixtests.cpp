@@ -207,6 +207,27 @@ TEST_CASE("matrix transpose", "[matrices]")
     }
 }
 
+TEST_CASE("matrix inverse", "[matrices]")
+{
+    SECTION("mat4 inverse")
+    {
+        float beforeValues[16] = { 1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 1, 12, 13, 14, 15, 1 };
+        mat4 actual;
+        memcpy(&actual, beforeValues, sizeof(beforeValues));
+        actual = actual.GetInverse();
+
+        float expectedValues[16] = { 
+            -0.463218, 0.151724, 0.051724, 0.018390,
+            0.255172, -0.172413, 0.027586, 0.027586,
+            0.155172, 0.027586, -0.072413, 0.027586,
+            0.121839, 0.027586, 0.027586, -0.039080 };
+        mat4 expect;
+        memcpy(&expect, expectedValues, sizeof(expectedValues));
+
+        EqualMatrices(actual, expect);
+    }
+}
+
 TEST_CASE("mat3 multiplication")
 {
         SECTION("mat3 *operator")

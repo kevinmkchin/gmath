@@ -285,6 +285,8 @@ union mat4
 
     inline mat4 GetTranspose();
 
+    inline mat4 GetInverse();
+
     /** Returns a float pointer to the memory layout of the matrix. Useful
         for uploading data to graphics API. OpenGL uses column-major order.*/
     float* ptr() const { return((float*)this); }
@@ -1017,6 +1019,19 @@ inline mat4 ViewMatrixLookAt(vec3 const& eye, vec3 const& target, vec3 const& ey
     return ret;
 }
 
+inline mat4 mat4::GetTranspose()
+{
+    mat4 ret;
+    for(int col = 0; col < 4; ++col)
+    {
+        for(int row = 0; row < 4; ++row)
+        {
+            ret[col][row] = columns[row][col];
+        }
+    }
+    return ret;
+}
+
 inline mat3 mat3::GetTranspose()
 {
     mat3 ret;
@@ -1030,16 +1045,138 @@ inline mat3 mat3::GetTranspose()
     return ret;
 }
 
-inline mat4 mat4::GetTranspose()
+inline mat4 mat4::GetInverse()
 {
-    mat4 ret;
-    for(int col = 0; col < 4; ++col)
+    float inv[16], det;
+    int i;
+
+    inv[0] = e[5]  * e[10] * e[15] - 
+             e[5]  * e[11] * e[14] - 
+             e[9]  * e[6]  * e[15] + 
+             e[9]  * e[7]  * e[14] +
+             e[13] * e[6]  * e[11] - 
+             e[13] * e[7]  * e[10];
+
+    inv[4] = -e[4]  * e[10] * e[15] + 
+              e[4]  * e[11] * e[14] + 
+              e[8]  * e[6]  * e[15] - 
+              e[8]  * e[7]  * e[14] - 
+              e[12] * e[6]  * e[11] + 
+              e[12] * e[7]  * e[10];
+
+    inv[8] = e[4]  * e[9] * e[15] - 
+             e[4]  * e[11] * e[13] - 
+             e[8]  * e[5] * e[15] + 
+             e[8]  * e[7] * e[13] + 
+             e[12] * e[5] * e[11] - 
+             e[12] * e[7] * e[9];
+
+    inv[12] = -e[4]  * e[9] * e[14] + 
+               e[4]  * e[10] * e[13] +
+               e[8]  * e[5] * e[14] - 
+               e[8]  * e[6] * e[13] - 
+               e[12] * e[5] * e[10] + 
+               e[12] * e[6] * e[9];
+
+    inv[1] = -e[1]  * e[10] * e[15] + 
+              e[1]  * e[11] * e[14] + 
+              e[9]  * e[2] * e[15] - 
+              e[9]  * e[3] * e[14] - 
+              e[13] * e[2] * e[11] + 
+              e[13] * e[3] * e[10];
+
+    inv[5] = e[0]  * e[10] * e[15] - 
+             e[0]  * e[11] * e[14] - 
+             e[8]  * e[2] * e[15] + 
+             e[8]  * e[3] * e[14] + 
+             e[12] * e[2] * e[11] - 
+             e[12] * e[3] * e[10];
+
+    inv[9] = -e[0]  * e[9] * e[15] + 
+              e[0]  * e[11] * e[13] + 
+              e[8]  * e[1] * e[15] - 
+              e[8]  * e[3] * e[13] - 
+              e[12] * e[1] * e[11] + 
+              e[12] * e[3] * e[9];
+
+    inv[13] = e[0]  * e[9] * e[14] - 
+              e[0]  * e[10] * e[13] - 
+              e[8]  * e[1] * e[14] + 
+              e[8]  * e[2] * e[13] + 
+              e[12] * e[1] * e[10] - 
+              e[12] * e[2] * e[9];
+
+    inv[2] = e[1]  * e[6] * e[15] - 
+             e[1]  * e[7] * e[14] - 
+             e[5]  * e[2] * e[15] + 
+             e[5]  * e[3] * e[14] + 
+             e[13] * e[2] * e[7] - 
+             e[13] * e[3] * e[6];
+
+    inv[6] = -e[0]  * e[6] * e[15] + 
+              e[0]  * e[7] * e[14] + 
+              e[4]  * e[2] * e[15] - 
+              e[4]  * e[3] * e[14] - 
+              e[12] * e[2] * e[7] + 
+              e[12] * e[3] * e[6];
+
+    inv[10] = e[0]  * e[5] * e[15] - 
+              e[0]  * e[7] * e[13] - 
+              e[4]  * e[1] * e[15] + 
+              e[4]  * e[3] * e[13] + 
+              e[12] * e[1] * e[7] - 
+              e[12] * e[3] * e[5];
+
+    inv[14] = -e[0]  * e[5] * e[14] + 
+               e[0]  * e[6] * e[13] + 
+               e[4]  * e[1] * e[14] - 
+               e[4]  * e[2] * e[13] - 
+               e[12] * e[1] * e[6] + 
+               e[12] * e[2] * e[5];
+
+    inv[3] = -e[1] * e[6] * e[11] + 
+              e[1] * e[7] * e[10] + 
+              e[5] * e[2] * e[11] - 
+              e[5] * e[3] * e[10] - 
+              e[9] * e[2] * e[7] + 
+              e[9] * e[3] * e[6];
+
+    inv[7] = e[0] * e[6] * e[11] - 
+             e[0] * e[7] * e[10] - 
+             e[4] * e[2] * e[11] + 
+             e[4] * e[3] * e[10] + 
+             e[8] * e[2] * e[7] - 
+             e[8] * e[3] * e[6];
+
+    inv[11] = -e[0] * e[5] * e[11] + 
+               e[0] * e[7] * e[9] + 
+               e[4] * e[1] * e[11] - 
+               e[4] * e[3] * e[9] - 
+               e[8] * e[1] * e[7] + 
+               e[8] * e[3] * e[5];
+
+    inv[15] = e[0] * e[5] * e[10] - 
+              e[0] * e[6] * e[9] - 
+              e[4] * e[1] * e[10] + 
+              e[4] * e[2] * e[9] + 
+              e[8] * e[1] * e[6] - 
+              e[8] * e[2] * e[5];
+
+    det = e[0] * inv[0] + e[1] * inv[4] + e[2] * inv[8] + e[3] * inv[12];
+
+    if (det == 0.f)
     {
-        for(int row = 0; row < 4; ++row)
-        {
-            ret[col][row] = columns[row][col];
-        }
+        return mat4();
     }
+
+    det = 1.0 / det;
+
+    mat4 ret;
+    for (i = 0; i < 16; i++)
+    {
+        ret.e[i] = inv[i] * det;
+    }
+
     return ret;
 }
 
