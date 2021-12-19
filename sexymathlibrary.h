@@ -1169,7 +1169,7 @@ inline mat4 mat4::GetInverse()
         return mat4();
     }
 
-    det = 1.0 / det;
+    det = 1.0f / det;
 
     mat4 ret;
     for (i = 0; i < 16; i++)
