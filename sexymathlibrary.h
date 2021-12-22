@@ -392,6 +392,16 @@ inline vec3 Normalize(vec3 a);
 inline vec4 Normalize(vec4 a);
 inline vec3 Lerp(vec3 from, vec3 to, float ratio);
 inline vec4 Lerp(vec4 from, vec4 to, float ratio);
+inline vec2 operator-(vec2 a);
+inline vec2 operator+(vec2 a, vec2 b);
+inline vec2 operator-(vec2 a, vec2 b);
+inline vec2 operator*(vec2 a, float b);
+inline vec2 operator*(float b, vec2 a);
+inline vec2 operator/(vec2 a, float b);
+inline vec2 &operator+=(vec2& a, vec2 b);
+inline vec2 &operator-=(vec2& a, vec2 b);
+inline vec2 &operator*=(vec2& a, float b);
+inline vec2 &operator/=(vec2& a, float b);
 inline vec3 operator-(vec3 a);
 inline vec3 operator+(vec3 a, vec3 b);
 inline vec3 operator-(vec3 a, vec3 b);
@@ -829,6 +839,17 @@ inline vec4 Normalize(vec4 a)
     }
     return Div(a, Magnitude(a));
 }
+
+inline vec2 operator-(vec2 a) { vec2 r = { -a.x, -a.y }; return(r); }
+inline vec2 operator+(vec2 a, vec2 b) { return Add(a, b); }
+inline vec2 operator-(vec2 a, vec2 b) { return Sub(a, b); }
+inline vec2 operator*(vec2 a, float b) { return Mul(a, b); }
+inline vec2 operator*(float b, vec2 a) { return Mul(a, b); }
+inline vec2 operator/(vec2 a, float b) { return Div(a, b); }
+inline vec2 &operator+=(vec2& a, vec2 b) { return(a = a + b); }
+inline vec2 &operator-=(vec2& a, vec2 b) { return(a = a - b); }
+inline vec2 &operator*=(vec2& a, float b) { return(a = a * b); }
+inline vec2 &operator/=(vec2& a, float b) { return(a = a / b); }
 
 inline vec3 operator-(vec3 a) { vec3 r = { -a.x, -a.y, -a.z }; return(r); }
 inline vec3 operator+(vec3 a, vec3 b) { return Add(a, b); }
