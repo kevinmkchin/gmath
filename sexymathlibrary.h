@@ -392,6 +392,7 @@ inline vec3 Normalize(vec3 a);
 inline vec4 Normalize(vec4 a);
 inline vec3 Lerp(vec3 from, vec3 to, float ratio);
 inline vec4 Lerp(vec4 from, vec4 to, float ratio);
+
 inline vec2 operator-(vec2 a);
 inline vec2 operator+(vec2 a, vec2 b);
 inline vec2 operator-(vec2 a, vec2 b);
@@ -402,6 +403,11 @@ inline vec2 &operator+=(vec2& a, vec2 b);
 inline vec2 &operator-=(vec2& a, vec2 b);
 inline vec2 &operator*=(vec2& a, float b);
 inline vec2 &operator/=(vec2& a, float b);
+inline bool operator==(const vec2& lhs, const vec2& rhs)
+{
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
 inline vec3 operator-(vec3 a);
 inline vec3 operator+(vec3 a, vec3 b);
 inline vec3 operator-(vec3 a, vec3 b);
@@ -412,6 +418,11 @@ inline vec3 &operator+=(vec3& a, vec3 b);
 inline vec3 &operator-=(vec3& a, vec3 b);
 inline vec3 &operator*=(vec3& a, float b);
 inline vec3 &operator/=(vec3& a, float b);
+inline bool operator==(const vec3& lhs, const vec3& rhs)
+{
+    return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
+}
+
 inline vec4 operator-(vec4 a);
 inline vec4 operator+(vec4 a, vec4 b);
 inline vec4 operator-(vec4 a, vec4 b);
@@ -422,6 +433,10 @@ inline vec4 &operator+=(vec4& a, vec4 b);
 inline vec4 &operator-=(vec4& a, vec4 b);
 inline vec4 &operator*=(vec4& a, float b);
 inline vec4 &operator/=(vec4& a, float b);
+inline bool operator==(const vec4& lhs, const vec4& rhs)
+{
+    return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w;
+}
 
 /**
  *
