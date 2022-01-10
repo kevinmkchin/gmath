@@ -482,6 +482,8 @@ inline mat4 TranslationMatrix(vec3 translation);
     https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions */
 inline mat4 RotationMatrix(quat q);
 
+inline mat3 RotationMatrix2D(float rotationInRadians);
+
 /** Generates scaling matrix for given x y z scales
     https://en.wikipedia.org/wiki/Scaling_(geometry)#Using_homogeneous_coordinates */
 inline mat4 ScaleMatrix(float x_scale, float y_scale, float z_scale);
@@ -972,6 +974,19 @@ inline mat4 TranslationMatrix(vec3 translation)
 inline mat4 RotationMatrix(quat q)
 {
     return mat4(q);
+}
+
+inline mat3 RotationMatrix2D(float rotationInRadians)
+{
+    mat3 ret;
+    float cr = cosf(rotationInRadians);
+    float sr = sinf(rotationInRadians);
+    ret[0][0] = cr;
+    ret[0][1] = sr;
+    ret[1][0] = -sr;
+    ret[1][1] = cr;
+    ret[2][2] = 1.f;
+    return ret;
 }
 
 inline mat4 ScaleMatrix(float x_scale, float y_scale, float z_scale)
