@@ -1,6 +1,6 @@
-# SexyMathLibrary
+# gmath
 
-A 3D math and linear algebra library written by Kevin Chin (https://kevch.in/)
+A 3D math and linear algebra library for games written by Kevin Chin (https://kevch.in/)
 
 Features:
 - Vectors & vector operations
