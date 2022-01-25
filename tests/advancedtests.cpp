@@ -41,11 +41,11 @@ TEST_CASE("Rotation Matrix", "[matrices]")
     SECTION("23 -23 50")
     {
         vec3 sv = { 23.f, -23.f, 50.f };
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*GM_DEG2RAD));
         glm::vec3 gv = { 23.f, -23.f, 50.f };
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
         EqualMatrices(smlRotate, glmRotate);
     }
@@ -53,11 +53,11 @@ TEST_CASE("Rotation Matrix", "[matrices]")
     SECTION("0 0 0")
     {
         vec3 sv = { 0.f, 0.f, 0.f };
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*GM_DEG2RAD));
         glm::vec3 gv = { 0.f, 0.f, 0.f };
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
         EqualMatrices(smlRotate, glmRotate);
     }
@@ -65,11 +65,11 @@ TEST_CASE("Rotation Matrix", "[matrices]")
     SECTION("1 -1 1")
     {
         vec3 sv = {1.f, -1.f, 1.f};
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * GM_DEG2RAD));
         glm::vec3 gv = {1.f, -1.f, 1.f};
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
         EqualMatrices(smlRotate, glmRotate);
     }
@@ -77,11 +77,11 @@ TEST_CASE("Rotation Matrix", "[matrices]")
     SECTION("-1 -89 91")
     {
         vec3 sv = {-1.f, -89.f, 91.f};
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * GM_DEG2RAD));
         glm::vec3 gv = {-1.f, -89.f, 91.f};
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
         EqualMatrices(smlRotate, glmRotate);
     }
@@ -89,11 +89,11 @@ TEST_CASE("Rotation Matrix", "[matrices]")
     SECTION("269 -271 179")
     {
         vec3 sv = {269.f, -271.f, 179.f};
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * GM_DEG2RAD));
         glm::vec3 gv = {269.f, -271.f, 179.f};
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
         EqualMatrices(smlRotate, glmRotate);
     }
@@ -101,11 +101,11 @@ TEST_CASE("Rotation Matrix", "[matrices]")
     SECTION("181 180 0")
     {
         vec3 sv = {181.f, 180.f, 0.f};
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv * GM_DEG2RAD));
         glm::vec3 gv = {181.f, 180.f, 0.f};
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
         EqualMatrices(smlRotate, glmRotate);
     }
@@ -141,11 +141,11 @@ TEST_CASE("Transformation Matrix", "[matrices]")
         glm::mat4 glmTrans = glm::translate(glm::mat4(1.0f), gv);
 
         sv = { 23.f, -23.f, 50.f };
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*GM_DEG2RAD));
         gv = { 23.f, -23.f, 50.f };
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
 
         sv = { 1.f, 1.f, 1.f };
@@ -167,11 +167,11 @@ TEST_CASE("Transformation Matrix", "[matrices]")
         glm::mat4 glmTrans = glm::translate(glm::mat4(1.0f), gv);
 
         sv = { -47.514,120.393,23.124 };
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*GM_DEG2RAD));
         gv = { -47.514,120.393,23.124 };
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
 
         sv = { -158.053,92.727,14.78 };
@@ -193,11 +193,11 @@ TEST_CASE("Transformation Matrix", "[matrices]")
         glm::mat4 glmTrans = glm::translate(glm::mat4(1.0f), gv);
 
         sv = { -72.573,-13.62,-66.19 };
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*GM_DEG2RAD));
         gv = { -72.573,-13.62,-66.19 };
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
 
         sv = { 4.499,2.578,2.79 };
@@ -221,11 +221,11 @@ TEST_CASE("Transformation Matrix", "[matrices]")
         glm::mat4 glmTrans = glm::translate(glm::mat4(1.0f), gv);
 
         sv = { -72.573,-13.62,-66.19 };
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*GM_DEG2RAD));
         gv = { -72.573,-13.62,-66.19 };
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
 
         sv = { 4.499,2.578,2.79 };
@@ -254,11 +254,11 @@ TEST_CASE("Transformation Matrix", "[matrices]")
         glm::mat4 glmTrans = glm::translate(glm::mat4(1.0f), gv);
 
         sv = { 8.715,14.429,33.86 };
-        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*SML_DEG2RAD));
+        mat4 smlRotate = RotationMatrix(EulerToQuat(sv*GM_DEG2RAD));
         gv = { 8.715,14.429,33.86 };
-        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * SML_DEG2RAD, glm::vec3(1,0,0));
-        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * SML_DEG2RAD, glm::vec3(0,1,0));
-        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * SML_DEG2RAD, glm::vec3(0,0,1));
+        glm::mat4 xRotMat = glm::rotate(glm::mat4(1.0f), gv.x * GM_DEG2RAD, glm::vec3(1,0,0));
+        glm::mat4 yRotMat = glm::rotate(glm::mat4(1.0f), gv.y * GM_DEG2RAD, glm::vec3(0,1,0));
+        glm::mat4 zRotMat = glm::rotate(glm::mat4(1.0f), gv.z * GM_DEG2RAD, glm::vec3(0,0,1));
         glm::mat4 glmRotate = yRotMat * zRotMat * xRotMat; // XZY order
 
         sv = { 5.47,5.065,2.066 };
@@ -352,7 +352,7 @@ TEST_CASE("View Matrix LookAt", "[matrices]")
         vec3 e = vec3(-3.62f,1000.1f,43.178f);
         vec3 t = vec3(40.3f,-20.123f,4.f);
         vec3 te = t - e;
-        vec3 r = Cross(te, SML_UP_VECTOR);
+        vec3 r = Cross(te, GM_UP_VECTOR);
         vec3 u = Cross(r, te);
         mat4 smlView = ViewMatrixLookAt(e,t,u);
         glm::mat4 glmView = glm::lookAt(glm::vec3(e.x,e.y,e.z),glm::vec3(t.x,t.y,t.z),glm::vec3(u.x,u.y,u.z));
@@ -364,7 +364,7 @@ TEST_CASE("View Matrix LookAt", "[matrices]")
         vec3 e = vec3(randf(),randf(),randf());
         vec3 t = vec3(randf(),randf(),randf());
         vec3 te = t - e;
-        vec3 r = Cross(te, SML_UP_VECTOR);
+        vec3 r = Cross(te, GM_UP_VECTOR);
         vec3 u = Cross(r, te);
         mat4 smlView = ViewMatrixLookAt(e,t,u);
         glm::mat4 glmView = glm::lookAt(glm::vec3(e.x,e.y,e.z),glm::vec3(t.x,t.y,t.z),glm::vec3(u.x,u.y,u.z));
