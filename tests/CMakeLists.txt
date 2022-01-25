@@ -14,4 +14,4 @@ include_directories(glm/simd)
 
 add_executable(tests
         catch.hpp
-        sexymathtests.cpp)
+        gmathtests.cpp)
