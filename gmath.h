@@ -3,14 +3,7 @@
     gmath.h
 
     A 3D math and linear algebra library for games written by Kevin Chin (https://kevch.in/)
-
-    Do this:
-        #define GMATH_IMPLEMENTATION
-    before you include this file in *one* C++ file to create the implementation.
-        // i.e. it should look like this:
-        #include ...
-        #include ...
-        #define GMATH_IMPLEMENTATION
+    Just include and use:
         #include "gmath.h"
 
 Features:
@@ -86,6 +79,8 @@ union vec3
         , z(zVal)
     {}
 
+    vec3(vec2 a, float b);
+
     float& operator[] (int row)
     {
         float* address = (float*)this;
@@ -154,6 +149,11 @@ struct vec2
     vec2(float xVal, float yVal)
         : x(xVal)
         , y(yVal)
+    {}
+
+    vec2(vec3 a)
+        : x(a.x)
+        , y(a.y)
     {}
 
     float& operator[] (int row)
@@ -253,6 +253,14 @@ union mat4
 
     mat4(const mat3& from);
 
+    mat4(vec4 a, vec4 b, vec4 c, vec4 d)
+    {
+        columns[0] = a;
+        columns[1] = b;
+        columns[2] = c;
+        columns[3] = d;
+    }
+
     /** Construct a 4x4 rotation matrix from the given quaternion */
     mat4(quat q);
 
@@ -291,6 +299,13 @@ union mat3
          float e20, float e21, float e22);
 
     mat3(const mat4& from);
+
+    mat3(vec3 a, vec3 b, vec3 c)
+    {
+        columns[0] = a;
+        columns[1] = b;
+        columns[2] = c;
+    }
 
     /** Construct 3x3 rotation matrix from given quaternion */
     mat3(quat q);
@@ -362,6 +377,9 @@ inline float Dot(vec2 a, vec2 b);
 inline float Dot(vec3 a, vec3 b);
 inline float Dot(vec4 a, vec4 b);
 inline vec3 Cross(vec3 a, vec3 b);
+inline float Length(vec2 a);
+inline float Length(vec3 a);
+inline float Length(vec4 a);
 inline float Magnitude(vec2 a);
 inline float Magnitude(vec3 a);
 inline float Magnitude(vec4 a);
@@ -381,10 +399,8 @@ inline vec2 &operator+=(vec2& a, vec2 b);
 inline vec2 &operator-=(vec2& a, vec2 b);
 inline vec2 &operator*=(vec2& a, float b);
 inline vec2 &operator/=(vec2& a, float b);
-inline bool operator==(const vec2& lhs, const vec2& rhs)
-{
-    return lhs.x == rhs.x && lhs.y == rhs.y;
-}
+inline bool operator==(const vec2& lhs, const vec2& rhs);
+inline bool operator!=(const vec2& lhs, const vec2& rhs);
 
 inline vec3 operator-(vec3 a);
 inline vec3 operator+(vec3 a, vec3 b);
@@ -396,10 +412,8 @@ inline vec3 &operator+=(vec3& a, vec3 b);
 inline vec3 &operator-=(vec3& a, vec3 b);
 inline vec3 &operator*=(vec3& a, float b);
 inline vec3 &operator/=(vec3& a, float b);
-inline bool operator==(const vec3& lhs, const vec3& rhs)
-{
-    return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
-}
+inline bool operator==(const vec3& lhs, const vec3& rhs);
+inline bool operator!=(const vec3& lhs, const vec3& rhs);
 
 inline vec4 operator-(vec4 a);
 inline vec4 operator+(vec4 a, vec4 b);
@@ -411,10 +425,8 @@ inline vec4 &operator+=(vec4& a, vec4 b);
 inline vec4 &operator-=(vec4& a, vec4 b);
 inline vec4 &operator*=(vec4& a, float b);
 inline vec4 &operator/=(vec4& a, float b);
-inline bool operator==(const vec4& lhs, const vec4& rhs)
-{
-    return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w;
-}
+inline bool operator==(const vec4& lhs, const vec4& rhs);
+inline bool operator!=(const vec4& lhs, const vec4& rhs);
 
 /**
  *
@@ -565,17 +577,18 @@ inline quat Slerp(const quat from, const quat to, const float ratio);
 /** Linearly interpolate between two floats */
 inline float Lerp(float from, float to, float ratio);
 
-#endif // _INCLUDE_GMATH_LIBRARY_H_
-// INTERFACE ENDS HERE
-
-// IMPLEMENTATION STARTS HERE
-#ifdef GMATH_IMPLEMENTATION
 
 // ==================================================================================================================
 //                                               IMPLEMENTATION
 // ==================================================================================================================
 
-mat4::mat4(float e00, float e01, float e02, float e03,
+inline vec3::vec3(vec2 a, float b)
+    : x(a.x)
+    , y(a.y)
+    , z(b)
+{}
+
+inline mat4::mat4(float e00, float e01, float e02, float e03,
            float e10, float e11, float e12, float e13,
            float e20, float e21, float e22, float e23,
            float e30, float e31, float e32, float e33)
@@ -598,7 +611,7 @@ mat4::mat4(float e00, float e01, float e02, float e03,
     e[15] = e33;
 }
 
-mat4::mat4(const mat3& from)
+inline mat4::mat4(const mat3& from)
 {
     columns[0][0] = from[0][0];
     columns[0][1] = from[0][1];
@@ -618,7 +631,7 @@ mat4::mat4(const mat3& from)
     columns[3][3] = 1.f;
 }
 
-mat3::mat3(float e00, float e01, float e02,
+inline mat3::mat3(float e00, float e01, float e02,
            float e10, float e11, float e12,
            float e20, float e21, float e22)
 {
@@ -634,7 +647,7 @@ mat3::mat3(float e00, float e01, float e02,
 }
 
 
-mat3::mat3(const mat4& from)
+inline mat3::mat3(const mat4& from)
 {
     columns[0][0] = from[0][0];
     columns[0][1] = from[0][1];
@@ -647,7 +660,7 @@ mat3::mat3(const mat4& from)
     columns[2][2] = from[2][2];
 }
 
-quat::quat(float W, float X, float Y, float Z)
+inline quat::quat(float W, float X, float Y, float Z)
         : w(W)
         , x(X)
         , y(Y)
@@ -656,7 +669,7 @@ quat::quat(float W, float X, float Y, float Z)
     *this = Normalize(*this);
 }
 
-quat::quat(float angleInRadians, vec3 axisOfRotation)
+inline quat::quat(float angleInRadians, vec3 axisOfRotation)
 {
     axisOfRotation = Normalize(axisOfRotation);
     float half_angle = angleInRadians * 0.5f;
@@ -667,12 +680,12 @@ quat::quat(float angleInRadians, vec3 axisOfRotation)
     z = axisOfRotation.z * s;
 }
 
-mat4::mat4(quat q)
+inline mat4::mat4(quat q)
 {
     *this = QuatToMat4(q);
 }
 
-mat3::mat3(quat q)
+inline mat3::mat3(quat q)
 {
     *this = QuatToMat3(q);
 }
@@ -802,6 +815,12 @@ inline vec3 Cross(vec3 a, vec3 b)
     return R;
 }
 
+inline float Length(vec2 a) { return Magnitude(a); }
+
+inline float Length(vec3 a) { return Magnitude(a); }
+
+inline float Length(vec4 a) { return Magnitude(a); }
+
 inline float Magnitude(vec2 a) { return sqrtf(Dot(a, a)); }
 
 inline float Magnitude(vec3 a) { return sqrtf(Dot(a, a)); }
@@ -845,6 +864,8 @@ inline vec2 &operator+=(vec2& a, vec2 b) { return(a = a + b); }
 inline vec2 &operator-=(vec2& a, vec2 b) { return(a = a - b); }
 inline vec2 &operator*=(vec2& a, float b) { return(a = a * b); }
 inline vec2 &operator/=(vec2& a, float b) { return(a = a / b); }
+inline bool operator==(const vec2& lhs, const vec2& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
+inline bool operator!=(const vec2& lhs, const vec2& rhs) { return !(lhs == rhs); }
 
 inline vec3 operator-(vec3 a) { vec3 r = { -a.x, -a.y, -a.z }; return(r); }
 inline vec3 operator+(vec3 a, vec3 b) { return Add(a, b); }
@@ -856,6 +877,8 @@ inline vec3 &operator+=(vec3& a, vec3 b) { return(a = a + b); }
 inline vec3 &operator-=(vec3& a, vec3 b) { return(a = a - b); }
 inline vec3 &operator*=(vec3& a, float b) { return(a = a * b); }
 inline vec3 &operator/=(vec3& a, float b) { return(a = a / b); }
+inline bool operator==(const vec3& lhs, const vec3& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z; }
+inline bool operator!=(const vec3& lhs, const vec3& rhs) { return !(lhs == rhs); }
 
 inline vec4 operator-(vec4 a) { vec4 r = { -a.x, -a.y, -a.z, -a.w }; return(r); }
 inline vec4 operator+(vec4 a, vec4 b) { return Add(a, b); }
@@ -867,6 +890,8 @@ inline vec4 &operator+=(vec4& a, vec4 b) { return(a = a + b); }
 inline vec4 &operator-=(vec4& a, vec4 b) { return(a = a - b); }
 inline vec4 &operator*=(vec4& a, float b) { return(a = a * b); }
 inline vec4 &operator/=(vec4& a, float b) { return(a = a / b); }
+inline bool operator==(const vec4& lhs, const vec4& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; }
+inline bool operator!=(const vec4& lhs, const vec4& rhs) { return !(lhs == rhs); }
 
 inline vec3 Lerp(vec3 from, vec3 to, float ratio) { return((1.0f - ratio) * from + to * ratio); }
 inline vec4 Lerp(vec4 from, vec4 to, float ratio) { return((1.0f - ratio) * from + to * ratio); }
@@ -1495,8 +1520,7 @@ inline float Lerp(float from, float to, float ratio)
     return from + ratio * (to - from);
 }
 
-#undef GMATH_IMPLEMENTATION
-#endif // GMATH_IMPLEMENTATION
+#endif // _INCLUDE_GMATH_LIBRARY_H_
 
 /*
 ------------------------------------------------------------------------------
