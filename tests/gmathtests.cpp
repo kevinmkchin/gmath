@@ -38,7 +38,6 @@ int CompareFloats(float x, float y, float epsilon = 0.000001f)
     }
 }
 
-#define GMATH_IMPLEMENTATION
 #include "../gmath.h"
 
 #include "constantstests.cpp"
