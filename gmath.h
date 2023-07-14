@@ -36,8 +36,10 @@ STANDARDS:
 #define GM_DOWN_VECTOR (-GM_UP_VECTOR)
 #define GM_RIGHT_VECTOR vec3(0.f,0.f,1.f)
 #define GM_LEFT_VECTOR (-GM_RIGHT_VECTOR)
-#define GM_PI 3.1415926535f
+#define GM_PI 3.141592653589f
 #define GM_TWOPI 6.28318530718f
+#define GM_HALFPI 1.570796f
+#define GM_QUARTERPI 0.785398f
 #define GM_D2R GM_DEG2RAD
 #define GM_R2D GM_RAD2DEG
 #define GM_DEG2RAD 0.0174532925f  // degrees * GM_DEG2RAD = radians
@@ -467,6 +469,7 @@ inline quat Normalize(quat a);
     https://en.wikipedia.org/wiki/Translation_(geometry)#Matrix_resentation */
 inline mat4 TranslationMatrix(float x, float y, float z);
 inline mat4 TranslationMatrix(vec3 translation);
+inline mat3 TranslationMatrix2D(vec2 translation);
 
 /** Generates rotation matrix for given quaternion represented rotation
     https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions */
@@ -478,6 +481,7 @@ inline mat3 RotationMatrix2D(float rotationInRadians);
     https://en.wikipedia.org/wiki/Scaling_(geometry)#Using_homogeneous_coordinates */
 inline mat4 ScaleMatrix(float x_scale, float y_scale, float z_scale);
 inline mat4 ScaleMatrix(vec3 scale);
+inline mat3 ScaleMatrix2D(vec2 scale);
 
 /** Creates a matrix for a symetric perspective-view frustum based on the default handedness and default near and far clip planes definition.
     fovy: Specifies the field of view angle in the y direction. Expressed in radians.
@@ -966,12 +970,22 @@ inline mat4 TranslationMatrix(float x, float y, float z)
     ret[3][0] = x;
     ret[3][1] = y;
     ret[3][2] = z;
+    ret[3][3] = 1.f;
     return ret;
 }
 
 inline mat4 TranslationMatrix(vec3 translation)
 {
     return TranslationMatrix(translation.x, translation.y, translation.z);
+}
+
+inline mat3 TranslationMatrix2D(vec2 translation) // TODO(Kevin): NEED TESTS
+{
+    mat3 ret = mat3();
+    ret[2][0] = translation.x;
+    ret[2][1] = translation.y;
+    ret[2][2] = 1.f;
+    return ret;
 }
 
 inline mat4 RotationMatrix(quat q)
@@ -1007,9 +1021,18 @@ inline mat4 ScaleMatrix(vec3 scale)
     return ScaleMatrix(scale.x, scale.y, scale.z);
 }
 
+inline mat3 ScaleMatrix2D(vec2 scale) // TODO(Kevin): NEED TESTS
+{
+    mat3 ret = mat3();
+    ret[0][0] = scale.x;
+    ret[1][1] = scale.y;
+    ret[2][2] = 1.f;
+    return ret;
+}
+
 inline mat4 ProjectionMatrixPerspective(float fovy, float aspect, float nearclip, float farclip)
 {
-    float const tanHalfFovy = tan(fovy / 2.f);
+    float const tanHalfFovy = tanf(fovy / 2.f);
 
     mat4 Result;
     Result[0][0] = 1.f / (aspect * tanHalfFovy);
@@ -1429,7 +1452,7 @@ inline quat RotationFromTo(vec3 fromDirection, vec3 toDirection)
     rotation_axis = Cross(start, dest);
     if (cos_theta >= -1 + 0.0001f)
     {
-        float s = sqrt((1 + cos_theta) * 2);
+        float s = sqrtf((1 + cos_theta) * 2);
         float sin_of_half_angle = 1 / s;
 
         rotation_quat = quat(
