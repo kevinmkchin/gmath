@@ -495,7 +495,8 @@ inline mat4 ProjectionMatrixPerspective(float fovy, float aspect, float nearclip
     https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluOrtho2D.xml
     left, right: Specify the coordinates for the left and right vertical clipping planes.
     bottom, top: Specify the coordinates for the bottom and top horizontal clipping planes.
-    e.g. ProjectionMatrixOrthographic(0.f, 1920.f, 1080.f, 0.f); */
+    e.g. ProjectionMatrixOrthographic2D(0.f, 1920.f, 1080.f, 0.f);
+    e.g. ProjectionMatrixOrthographic2D(0.f, 1920.f, 0.f, 1080.f); <-- vertical flip */
 inline mat4 ProjectionMatrixOrthographic2D(float left, float right, float bottom, float top);
 
 /** Creates a matrix for an orthographic parallel viewing volume, using right-handed coordinates.
