@@ -29,6 +29,7 @@ STANDARDS:
 #define _INCLUDE_GMATH_LIBRARY_H_
 
 #include <cstdlib>
+#include <cmath>
 
 #define GM_FORWARD_VECTOR vec3(1.f,0.f,0.f)
 #define GM_BACKWARD_VECTOR (-GM_FORWARD_VECTOR)
