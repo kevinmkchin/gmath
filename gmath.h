@@ -484,7 +484,7 @@ inline mat4 ScaleMatrix(float x_scale, float y_scale, float z_scale);
 inline mat4 ScaleMatrix(vec3 scale);
 inline mat3 ScaleMatrix2D(vec2 scale);
 
-/** Creates a matrix for a symetric perspective-view frustum based on the default handedness and default near and far clip planes definition.
+/** Creates a 4x4 matrix for a symetric perspective-view frustum based on the default handedness and default near and far clip planes definition.
     fovy: Specifies the field of view angle in the y direction. Expressed in radians.
     aspect: Specifies the aspect ratio that determines the field of view in the x direction. The aspect ratio is the ratio of x (width) to y (height).
     nearclip: Specifies the distance from the viewer to the near clipping plane (always positive).
@@ -492,21 +492,28 @@ inline mat3 ScaleMatrix2D(vec2 scale);
     https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml */
 inline mat4 ProjectionMatrixPerspective(float fovy, float aspect, float nearclip, float farclip);
 
-/** Creates a matrix for projecting two-dimensional coordinates onto the screen.
-    https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluOrtho2D.xml
-    left, right: Specify the coordinates for the left and right vertical clipping planes.
-    bottom, top: Specify the coordinates for the bottom and top horizontal clipping planes.
-    e.g. ProjectionMatrixOrthographic2D(0.f, 1920.f, 1080.f, 0.f);
-    e.g. ProjectionMatrixOrthographic2D(0.f, 1920.f, 0.f, 1080.f); <-- vertical flip */
-inline mat4 ProjectionMatrixOrthographic2D(float left, float right, float bottom, float top);
-
-/** Creates a matrix for an orthographic parallel viewing volume, using right-handed coordinates.
+/** Creates a 4x4 matrix for an orthographic parallel viewing volume, using right-handed coordinates.
     https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
     The near and far clip planes correspond to z normalized device coordinates of -1 and +1
     respectively (OpenGL clip volume definition). */
 inline mat4 ProjectionMatrixOrthographic(float left, float right, float bottom, float top, float z_near, float z_far);
 
-/** Creates a ViewMatrix at eye looking at target. */
+/** Creates a 4x4 matrix for projecting two-dimensional coordinates onto the screen.
+    https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluOrtho2D.xml
+    left, right: Specify the coordinates for the left and right vertical clipping planes.
+    bottom, top: Specify the coordinates for the bottom and top horizontal clipping planes.
+    e.g. ProjectionMatrixOrthographicNoZ(0.f, 1920.f, 1080.f, 0.f);
+    e.g. ProjectionMatrixOrthographicNoZ(0.f, 1920.f, 0.f, 1080.f); <-- vertical flip */
+inline mat4 ProjectionMatrixOrthographicNoZ(float left, float right, float bottom, float top);
+
+/** Creates a 3x3 matrix for projecting two-dimensional coordinates onto the screen.
+    This is used for transforming vec3s where vec3.x is the X coordinate, vec3.y is
+    the Y coordinate, and vec3.z is 1 for points and 0 for vectors. This is different
+    from ProjectionMatrixOrthographicNoZ which gives a 4x4 matrix used for transforming
+    vec4s which includes a Z coordinate which is discarded. */
+inline mat3 ProjectionMatrixOrthographic2D(float left, float right, float bottom, float top);
+
+/** Creates a 4x4 ViewMatrix at eye looking at target. */
 inline mat4 ViewMatrixLookAt(vec3 const& eye, vec3 const& target, vec3 const& eyeUpVector);
 
 /** Checks if Dot product of a and b is within +/- tolerance */
@@ -1046,7 +1053,19 @@ inline mat4 ProjectionMatrixPerspective(float fovy, float aspect, float nearclip
     return Result;
 }
 
-inline mat4 ProjectionMatrixOrthographic2D(float left, float right, float bottom, float top)
+inline mat4 ProjectionMatrixOrthographic(float left, float right, float bottom, float top, float z_near, float z_far)
+{
+    mat4 ret = mat4();
+    ret[0][0] = 2.f / (right - left);
+    ret[1][1] = 2.f / (top - bottom);
+    ret[2][2] = - 2.f / (z_far - z_near);
+    ret[3][0] = - (right + left) / (right - left);
+    ret[3][1] = - (top + bottom) / (top - bottom);
+    ret[3][2] = - (z_far + z_near) / (z_far - z_near);
+    return ret;
+}
+
+inline mat4 ProjectionMatrixOrthographicNoZ(float left, float right, float bottom, float top)
 {
     mat4 ret = mat4();
     ret[0][0] = 2.f / (right - left);
@@ -1057,15 +1076,14 @@ inline mat4 ProjectionMatrixOrthographic2D(float left, float right, float bottom
     return ret;
 }
 
-inline mat4 ProjectionMatrixOrthographic(float left, float right, float bottom, float top, float z_near, float z_far)
+inline mat3 ProjectionMatrixOrthographic2D(float left, float right, float bottom, float top)
 {
-    mat4 ret = mat4();
+    mat3 ret = mat3();
     ret[0][0] = 2.f / (right - left);
     ret[1][1] = 2.f / (top - bottom);
-    ret[2][2] = - 2.f / (z_far - z_near);
-    ret[3][0] = - (right + left) / (right - left);
-    ret[3][1] = - (top + bottom) / (top - bottom);
-    ret[3][2] = - (z_far + z_near) / (z_far - z_near);
+    ret[2][0] = -(right + left) / (right - left);
+    ret[2][1] = -(top + bottom) / (top - bottom);
+    ret[2][2] = 1.f;
     return ret;
 }
 
