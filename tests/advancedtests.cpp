@@ -297,18 +297,18 @@ TEST_CASE("Projection Matrix Perspective", "[matrices]")
     }
 }
 
-TEST_CASE("Projection Matrix Orthographic 2D", "[matrices]")
+TEST_CASE("Projection Matrix Orthographic No Z", "[matrices]")
 {
-    SECTION("ortho2d 0.f 1000.f")
+    SECTION("ortho no z 0.f 1000.f")
     {
-        mat4 smlOrtho = ProjectionMatrixOrthographic2D(0.f, 1000.f, 0.f, 1000.f);
+        mat4 smlOrtho = ProjectionMatrixOrthographicNoZ(0.f, 1000.f, 0.f, 1000.f);
         glm::mat4 glmOrtho = glm::ortho(0.f, 1000.f, 0.f, 1000.f);
         EqualMatrices(smlOrtho, glmOrtho);
     }
 
-    SECTION("ortho2d -300.f 300f")
+    SECTION("ortho no z -300.f 300f")
     {
-        mat4 smlOrtho = ProjectionMatrixOrthographic2D(-300.f, 300.f, -300.f, 300.f);
+        mat4 smlOrtho = ProjectionMatrixOrthographicNoZ(-300.f, 300.f, -300.f, 300.f);
         glm::mat4 glmOrtho = glm::ortho(-300.f, 300.f, -300.f, 300.f);
         EqualMatrices(smlOrtho, glmOrtho);
     }
@@ -328,6 +328,37 @@ TEST_CASE("Projection Matrix Orthographic", "[matrices]")
         mat4 smlOrtho = ProjectionMatrixOrthographic(-300.f, 300.f, -300.f, 300.f, 0.f, 100.f);
         glm::mat4 glmOrtho = glm::ortho(-300.f, 300.f, -300.f, 300.f, 0.f, 100.f);
         EqualMatrices(smlOrtho, glmOrtho);
+    }
+}
+
+TEST_CASE("Projection Matrix Orthographic 2D", "[matrices]")
+{
+    SECTION("ortho2d 0.f 1000.f")
+    {
+        mat3 smlOrtho = ProjectionMatrixOrthographic2D(0.f, 1000.f, 0.f, 1000.f);
+
+        glm::mat3 expected = glm::mat3();
+        expected[0][0] = 2.f / (1000.f - 0.f);
+        expected[1][1] = 2.f / (1000.f - 0.f);
+        expected[2][0] = -(1000.f + 0.f) / (1000.f - 0.f);
+        expected[2][1] = -(1000.f + 0.f) / (1000.f - 0.f);
+        expected[2][2] = 1.f;
+
+        EqualMatrices(smlOrtho, expected);
+    }
+
+    SECTION("ortho2d -300.f 300f")
+    {
+        mat3 smlOrtho = ProjectionMatrixOrthographic2D(-300.f, 300.f, -300.f, 300.f);
+
+        glm::mat3 expected = glm::mat3();
+        expected[0][0] = 2.f / (300.f - (-300.f));
+        expected[1][1] = 2.f / (300.f - (-300.f));
+        expected[2][0] = -(300.f + (-300.f)) / (300.f - (-300.f));
+        expected[2][1] = -(300.f + (-300.f)) / (300.f - (-300.f));
+        expected[2][2] = 1.f;
+
+        EqualMatrices(smlOrtho, expected);
     }
 }
 
