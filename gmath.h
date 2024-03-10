@@ -49,6 +49,7 @@ STANDARDS:
 #define GM_min(a, b) ((a) < (b) ? (a) : (b))
 #define GM_max(a, b) ((a) > (b) ? (a) : (b))
 #define GM_abs(a) ((a) < 0.f ? (-(a)) : (a))
+#define GM_sign(x) ((x > 0) - (x < 0))
 #define GM_clamp(x, lower, upper) GM_max((lower), GM_min((upper), (x)))
 
 
